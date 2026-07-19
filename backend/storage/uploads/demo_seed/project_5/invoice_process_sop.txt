@@ -1,0 +1,1 @@
+Receive invoice email. Download attachment. Extract invoice data. Validate amount. Approve high value exceptions. Update ERP.

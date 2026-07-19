@@ -1,0 +1,240 @@
+Accounts Payable Invoice Processing
+
+Document ID: AP-WF-001
+Version: 1.0
+Department: Finance – Accounts Payable
+Client: Acme Manufacturing
+
+Accounts Payable Invoice Processing Workflow
+Purpose
+
+This document describes the current-state invoice processing workflow for Acme Manufacturing. The objective is to understand manual activities, identify bottlenecks, and evaluate opportunities for intelligent automation.
+
+Business Overview
+
+Acme Manufacturing receives approximately 2,500 supplier invoices per month from more than 180 vendors.
+
+Invoices arrive through multiple channels:
+
+Email (70%)
+Paper Mail (15%)
+Vendor Portal (10%)
+EDI (5%)
+
+The AP team consists of:
+
+1 AP Manager
+4 AP Specialists
+2 Finance Approvers
+
+Average invoice value: $4,800
+
+Current Workflow
+Step 1 – Invoice Receipt
+
+Owner: AP Specialist
+
+Activities:
+
+Monitor AP mailbox
+Download invoice attachments
+Scan paper invoices
+Save invoices to shared folder
+
+Average Time:
+5 minutes per invoice
+
+Pain Points:
+
+Multiple input channels
+Manual downloading
+Missing attachments
+Step 2 – Invoice Registration
+
+Owner:
+AP Specialist
+
+Activities:
+
+Open ERP system
+Create invoice record
+Enter:
+Vendor Name
+Invoice Number
+Invoice Date
+Due Date
+Amount
+Tax
+
+Average Time:
+8 minutes
+
+Pain Points
+
+Manual typing
+Duplicate invoices
+Data entry errors
+Step 3 – PO Matching
+
+Owner:
+AP Specialist
+
+Activities
+
+Search Purchase Order
+Compare
+Vendor
+Quantity
+Price
+Tax
+
+Decision
+
+Match Found?
+
+YES → Continue
+
+NO → Exception Queue
+
+Average Time
+
+6 minutes
+
+Pain Points
+
+Missing PO
+Price mismatch
+Incorrect quantities
+Step 4 – Approval
+
+Owner:
+Department Manager
+
+Activities
+
+Review invoice
+Verify budget
+Approve or Reject
+
+Average Time
+
+1–3 business days
+
+Pain Points
+
+Delayed approvals
+Email reminders
+Lost emails
+Step 5 – ERP Posting
+
+Owner:
+Finance Team
+
+Activities
+
+Post approved invoice
+Validate GL coding
+Schedule payment
+
+Average Time
+
+4 minutes
+
+Pain Points
+
+Incorrect GL codes
+Manual validation
+Step 6 – Payment
+
+Owner:
+Finance
+
+Activities
+
+Payment batch generation
+Bank file creation
+Payment confirmation
+
+Average Time
+
+Daily payment run
+
+Step 7 – Archive
+
+Owner:
+AP Specialist
+
+Activities
+
+Save invoice PDF
+Store approval history
+Update document repository
+
+Pain Points
+
+Manual filing
+Difficult document search
+Current Process Metrics
+Metric	Current Value
+Monthly invoices	2,500
+Average processing time	24 minutes/invoice
+Approval turnaround	2.3 days
+Error rate	4.8%
+Duplicate invoices/month	18
+Manual touchpoints	12
+FTE involved	6
+Annual processing cost	$285,000
+Key Bottlenecks
+Manual data entry into ERP
+Email-based approval workflow
+PO matching delays
+Duplicate invoice detection
+Manual document filing
+Lack of workflow visibility
+Automation Opportunities
+Opportunity	Expected Benefit
+OCR Invoice Extraction	Eliminate manual typing
+AI Data Validation	Reduce errors
+Automatic PO Matching	Faster processing
+Approval Workflow Automation	Shorter approval cycles
+Duplicate Invoice Detection	Prevent payment errors
+ERP Integration	Straight-through processing
+Automated Notifications	Faster approvals
+Digital Archive	Easy document retrieval
+Estimated Business Benefits
+70% reduction in manual data entry
+60% faster invoice processing
+80% fewer data entry errors
+50% reduction in approval delays
+Annual savings of approximately $160,000
+ROI expected within 12–15 months
+Recommended Future State
+Invoice Received
+        │
+        ▼
+AI OCR Extraction
+        │
+        ▼
+Automatic Validation
+        │
+        ▼
+PO Matching
+   │           │
+Matched    Exception Queue
+   │
+   ▼
+Approval Workflow
+   │
+   ▼
+ERP Posting
+   │
+   ▼
+Payment
+   │
+   ▼
+Digital Archive
+Conclusion
+
+The current invoice process relies heavily on manual data entry, email-based approvals, and repetitive validation activities. Implementing intelligent invoice automation with OCR, workflow automation, ERP integration, and AI-assisted validation is expected to significantly improve efficiency, reduce operational costs, and increase processing accuracy.
+
+This document is representative of a typical AP discovery artifact and is suitable for demonstrating document upload, text extraction, and analysis capabilities in the AVIP platform.

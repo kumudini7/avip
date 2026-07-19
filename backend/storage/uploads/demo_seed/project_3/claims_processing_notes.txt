@@ -1,0 +1,1 @@
+Claims are received by email and portal. OCR reads attachments. AI classifies claim type. Human reviews exceptions. System updates the claim ledger.
