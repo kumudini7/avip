@@ -10,7 +10,7 @@ from app.services.document_processor import ensure_directory
 
 origins = [
     "http://localhost:5173",
-    "https://avip-1.onrender.com/",
+    "https://avip-21.onrender.com",
 ]
 
 app.add_middleware(
