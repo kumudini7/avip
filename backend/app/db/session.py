@@ -8,8 +8,28 @@ class Base(DeclarativeBase):
     pass
 
 
-engine = create_engine(settings.database_url, pool_pre_ping=True)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+from pathlib import Path
+from sqlalchemy import create_engine
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+CA_CERT = BASE_DIR / "certs" / "ca.pem"
+
+engine = create_engine(
+    settings.database_url,
+    pool_pre_ping=True,
+    connect_args={
+        "ssl": {
+            "ca": str(CA_CERT)
+        }
+    }
+)
+
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
+)
 
 
 def get_db():
@@ -18,4 +38,3 @@ def get_db():
         yield db
     finally:
         db.close()
-
