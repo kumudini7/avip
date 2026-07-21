@@ -24,10 +24,11 @@ app = FastAPI(title=settings.app_name)
 logger = logging.getLogger(__name__)
 cors_origins = [
     "http://localhost:5173",
+    "https://avip-frontend.onrender.com"
 ]
 origins = [
     "http://localhost:5173",
-    "https://avip-21.onrender.com",
+    "https://avip-frontend.onrender.com",
 
 ]
 
