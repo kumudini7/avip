@@ -25,5 +25,6 @@ class Proposal(Base):
     project: Mapped["Project"] = relationship("Project", back_populates="proposals")
     artifacts: Mapped[list["ProposalArtifact"]] = relationship(
         "ProposalArtifact",
+        back_populates="proposal",
         cascade="all, delete-orphan",
     )

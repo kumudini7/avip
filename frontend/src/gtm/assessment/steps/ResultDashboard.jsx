@@ -3,12 +3,14 @@ import { getAssessmentResult } from '../../../services/api';
 import OverviewTab from './OverviewTab';
 import ArchitectureTab from './ArchitectureTab';
 import RoiCalculatorTab from './RoiCalculatorTab';
+import ScorecardTab from './ScorecardTab';
 import AssessmentHistoryPanel from './AssessmentHistoryPanel';
 
 const TABS = [
   { id: 'overview', label: 'Overview' },
   { id: 'architecture', label: 'Architecture' },
   { id: 'roi', label: 'ROI Calculator' },
+  { id: 'scorecard', label: 'Executive Scorecard' },
 ];
 
 const CATEGORY_META = {
@@ -101,6 +103,7 @@ export default function ResultDashboard({
           onRoiUpdated={(roi) => setResult((current) => ({ ...current, roi }))}
         />
       ) : null}
+      {activeTab === 'scorecard' ? <ScorecardTab result={result} /> : null}
 
       <AssessmentHistoryPanel
         assessments={assessments}

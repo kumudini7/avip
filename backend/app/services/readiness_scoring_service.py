@@ -117,12 +117,20 @@ def compute_scores(*, domain: str, answers: dict[str, int]) -> dict:
     compliance_criticality = _get(answers, "compliance_criticality")
     system_integration_complexity = _get(answers, "system_integration_complexity")
 
+    # AI Readiness is the mean of 5 equally-weighted areas (Data, Infrastructure,
+    # Governance, AI Skills, Existing Automation) - two of the five reuse answers
+    # already collected above (Governance, Existing Automation) rather than
+    # asking again; see final_scorecard_service for the matching per-area breakdown.
+    ai_data_readiness = _get(answers, "ai_data_readiness")
+    ai_infrastructure_readiness = _get(answers, "ai_infrastructure_readiness")
+    ai_skills_readiness = _get(answers, "ai_skills_readiness")
     ai_readiness_avg = (
-        ai_governance_maturity * 0.35
-        + automation_landscape * 0.25
-        + data_type * 0.20
-        + human_judgment_frequency * 0.20
-    )
+        ai_data_readiness
+        + ai_infrastructure_readiness
+        + ai_governance_maturity
+        + ai_skills_readiness
+        + automation_landscape
+    ) / 5
     automation_maturity_avg = (
         process_standardization * 0.35
         + automation_landscape * 0.35

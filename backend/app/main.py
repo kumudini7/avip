@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -9,10 +11,14 @@ from app.services.document_processor import ensure_directory
 
 
 app = FastAPI(title=settings.app_name)
+logger = logging.getLogger(__name__)
+cors_origins = [
+    "http://localhost:5173",
+]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins,
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -33,10 +39,10 @@ def prepare_storage() -> None:
     try:
         seed_demo_data()
     except Exception:
-        # Demo seeding should never block app startup.
+        logger.exception("Demo seeding failed; continuing without demo data.")
         pass
     try:
         seed_assessment_data()
     except Exception:
-        # Assessment seeding should never block app startup.
+        logger.exception("Assessment seeding failed; continuing without assessment data.")
         pass

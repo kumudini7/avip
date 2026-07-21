@@ -35,7 +35,9 @@ class ResponsesSubmit(BaseModel):
 class QuestionnaireQuestion(BaseModel):
     key: str
     question_text: str
-    scale_labels: dict[int, str]
+    question_type: Literal["rating", "percent", "multi_select"] = "rating"
+    scale_labels: dict[int, str] = Field(default_factory=dict)
+    options: list[dict[str, str]] | None = None
 
 
 class ClassificationResultRead(BaseModel):
@@ -57,6 +59,7 @@ class ClassificationResultRead(BaseModel):
     ) = None
     business_justification: list[str] | None = None
     roi_estimate: str | None = None
+    dashboard_metrics: dict[str, Any] | None = None
 
 
 class UseCaseDetail(BaseModel):

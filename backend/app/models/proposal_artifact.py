@@ -23,6 +23,5 @@ class ProposalArtifact(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    proposal: Mapped["Proposal"] = relationship("Proposal")
+    proposal: Mapped["Proposal"] = relationship("Proposal", back_populates="artifacts", overlaps="artifacts")
     job: Mapped["WorkflowJob"] = relationship("WorkflowJob")
-

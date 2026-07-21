@@ -34,6 +34,7 @@ class Project(Base):
     )
     jobs: Mapped[list["WorkflowJob"]] = relationship(
         "WorkflowJob",
+        back_populates="project",
         cascade="all, delete-orphan",
     )
     proposals: Mapped[list["Proposal"]] = relationship(

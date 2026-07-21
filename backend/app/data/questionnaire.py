@@ -494,18 +494,157 @@ _DOMAIN_QUESTIONS: dict[str, dict[str, dict[str, Any]]] = {
 }
 
 
+BUSINESS_OBJECTIVE_OPTIONS = [
+    {"key": "reduce_cost", "label": "Reduce Cost"},
+    {"key": "improve_cx", "label": "Improve Customer Experience"},
+    {"key": "increase_revenue", "label": "Increase Revenue"},
+    {"key": "improve_compliance", "label": "Improve Compliance"},
+    {"key": "reduce_risk", "label": "Reduce Risk"},
+    {"key": "improve_quality", "label": "Improve Quality"},
+]
+
+# Questions added on top of the original 10 domain-flavored ones, to power the
+# Process DNA / Decision Complexity / AI Readiness / Business Case dashboard
+# blocks. These are shared verbatim across every domain (rather than getting
+# bespoke per-domain text like the original 10) to keep the addition
+# tractable - four of the six Decision Complexity parameters and two of the
+# five AI Readiness areas are intentionally answered by reusing existing keys
+# above instead of asking the same thing twice (see readiness_scoring_service
+# and final_scorecard_service).
+_EXTENDED_QUESTION_ORDER = [
+    "business_objectives",
+    "process_dna_rule_based",
+    "process_dna_human_judgment",
+    "process_dna_knowledge_dependency",
+    "process_dna_creativity",
+    "process_dna_collaboration",
+    "recommendations_needed",
+    "risk_of_wrong_decision",
+    "ai_data_readiness",
+    "ai_infrastructure_readiness",
+    "ai_skills_readiness",
+    "current_compliance_rate",
+    "current_error_rate",
+]
+
+_SHARED_EXTENDED_QUESTIONS: dict[str, dict[str, Any]] = {
+    "business_objectives": {
+        "question_text": "Why are you automating this process? (select all that apply)",
+        "question_type": "multi_select",
+        "options": BUSINESS_OBJECTIVE_OPTIONS,
+    },
+    "process_dna_rule_based": {
+        "question_text": "What % of this process follows fixed, deterministic rules?",
+        "question_type": "percent",
+    },
+    "process_dna_human_judgment": {
+        "question_text": "What % of this process requires human judgment or discretion?",
+        "question_type": "percent",
+    },
+    "process_dna_knowledge_dependency": {
+        "question_text": "What % of this process depends on specialised knowledge or expertise?",
+        "question_type": "percent",
+    },
+    "process_dna_creativity": {
+        "question_text": "What % of this process requires creative or novel problem-solving?",
+        "question_type": "percent",
+    },
+    "process_dna_collaboration": {
+        "question_text": "What % of this process requires cross-team or cross-system collaboration?",
+        "question_type": "percent",
+    },
+    "recommendations_needed": {
+        "question_text": "Does the process need the system to proactively recommend a next-best action, rather than just execute steps?",
+        "scale_labels": {
+            1: "No recommendation needed - purely execute fixed steps",
+            2: "Rarely - occasional suggestions would help",
+            3: "Sometimes - recommendations would help with some cases",
+            4: "Often - most cases benefit from a suggested next action",
+            5: "Always - the process is centred on recommending the best action",
+        },
+    },
+    "risk_of_wrong_decision": {
+        "question_text": "What is the business impact if an automated decision in this process is wrong?",
+        "scale_labels": {
+            1: "Negligible - easily caught and corrected, no real impact",
+            2: "Minor - small rework cost, no external impact",
+            3: "Moderate - noticeable cost or customer impact",
+            4: "High - significant financial, compliance, or reputational impact",
+            5: "Severe - safety, legal, or major financial consequences",
+        },
+    },
+    "ai_data_readiness": {
+        "question_text": "How ready is your data (quality, accessibility, labeling) for AI use?",
+        "scale_labels": {
+            1: "Data is scattered, inconsistent, or largely inaccessible",
+            2: "Some data is centralised but quality/labeling is poor",
+            3: "Data is reasonably clean and accessible, moderate quality",
+            4: "Data is well-structured, accessible, and mostly clean",
+            5: "Data is high-quality, labeled, and readily available for AI",
+        },
+    },
+    "ai_infrastructure_readiness": {
+        "question_text": "How ready is your infrastructure (compute, APIs, cloud access) for AI/agentic deployment?",
+        "scale_labels": {
+            1: "No cloud/API access, on-prem only, no AI infrastructure",
+            2: "Limited infrastructure, mostly manual/legacy systems",
+            3: "Some cloud and API access, partial AI-readiness",
+            4: "Good cloud/API infrastructure, ready for most AI workloads",
+            5: "Full cloud-native infrastructure with mature AI/ML platform",
+        },
+    },
+    "ai_skills_readiness": {
+        "question_text": "How mature are your team's AI/ML skills?",
+        "scale_labels": {
+            1: "No AI/ML skills in the team",
+            2: "Basic awareness, no hands-on experience",
+            3: "Some team members have applied AI/ML experience",
+            4: "Dedicated AI/ML practitioners on the team",
+            5: "Mature AI/ML/engineering practice with proven delivery",
+        },
+    },
+    "current_compliance_rate": {
+        "question_text": "What % of this process currently meets compliance requirements?",
+        "question_type": "percent",
+    },
+    "current_error_rate": {
+        "question_text": "What % of transactions in this process currently contain errors or require rework?",
+        "question_type": "percent",
+    },
+}
+
+
 def get_questionnaire(domain: str) -> list[dict[str, Any]]:
     domain_questions = _DOMAIN_QUESTIONS.get(domain, {})
-    return [
-        {
-            "key": key,
-            "question_text": domain_questions[key]["question_text"],
-            "scale_labels": domain_questions[key]["scale_labels"],
-        }
-        for key in _QUESTION_ORDER
-        if key in domain_questions
-    ]
+    questions: list[dict[str, Any]] = []
+
+    for key in _QUESTION_ORDER:
+        if key not in domain_questions:
+            continue
+        questions.append(
+            {
+                "key": key,
+                "question_text": domain_questions[key]["question_text"],
+                "question_type": "rating",
+                "scale_labels": domain_questions[key]["scale_labels"],
+                "options": None,
+            }
+        )
+
+    for key in _EXTENDED_QUESTION_ORDER:
+        definition = _SHARED_EXTENDED_QUESTIONS[key]
+        questions.append(
+            {
+                "key": key,
+                "question_text": definition["question_text"],
+                "question_type": definition.get("question_type", "rating"),
+                "scale_labels": definition.get("scale_labels", {}),
+                "options": definition.get("options"),
+            }
+        )
+
+    return questions
 
 
 def get_question_keys() -> list[str]:
-    return list(_QUESTION_ORDER)
+    return list(_QUESTION_ORDER) + list(_EXTENDED_QUESTION_ORDER)

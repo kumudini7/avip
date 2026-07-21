@@ -71,6 +71,21 @@ def _validate_payload(payload: dict[str, Any]) -> bool:
     return True
 
 
+def _format_answer(question: dict[str, Any], value: Any) -> str:
+    if value is None:
+        return "(not answered)"
+    question_type = question.get("question_type", "rating")
+    if question_type == "percent":
+        return f"{value}%"
+    if question_type == "multi_select":
+        if not isinstance(value, list) or not value:
+            return "(not answered)"
+        options_by_key = {option["key"]: option["label"] for option in question.get("options") or []}
+        return ", ".join(options_by_key.get(item, item) for item in value)
+    label = question["scale_labels"].get(value, "(not answered)")
+    return f"{value}/5 - {label}"
+
+
 def _build_prompt(
     *,
     domain: str,
@@ -83,8 +98,8 @@ def _build_prompt(
     qa_lines = []
     for question in questions:
         value = responses_by_question.get(question["key"])
-        label = question["scale_labels"].get(value, "(not answered)") if value is not None else "(not answered)"
-        qa_lines.append(f"- Q: {question['question_text']}\n  A: {value}/5 - {label}")
+        answer_text = _format_answer(question, value)
+        qa_lines.append(f"- Q: {question['question_text']}\n  A: {answer_text}")
     qa_block = "\n".join(qa_lines) if qa_lines else "No questionnaire answers provided."
 
     kb_entries = get_use_cases_for_domain(domain)

@@ -11,6 +11,11 @@ const defaultAuthForm = {
   company: '',
 };
 
+const demoAuthForm = {
+  email: 'demo@avip.test',
+  password: 'Demo@12345',
+};
+
 export default function App() {
   const [user, setUser] = useState(null);
   const [authMode, setAuthMode] = useState('login');
@@ -146,6 +151,21 @@ export default function App() {
                   Register
                 </button>
               </div>
+
+              {authMode === 'login' ? (
+                <div className="flex flex-wrap items-center gap-3 rounded-2xl bg-slate-50 px-4 py-3 text-xs leading-5 text-slate-600">
+                  <span>
+                    New here? Register with your work email, or use the seeded demo account for a quick walkthrough.
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setAuthForm({ ...defaultAuthForm, ...demoAuthForm })}
+                    className="rounded-full bg-slate-900 px-3 py-1.5 font-medium text-white transition hover:bg-slate-800"
+                  >
+                    Fill demo account
+                  </button>
+                </div>
+              ) : null}
 
               {authMode === 'register' ? (
                 <>
